@@ -13,14 +13,10 @@ class vps extends Model
         'cpu',
         'ram',
         'storage',
-        'user_id',
-        'wallet_id'
+        'price'
     ];
 
-    public function user() {
-        return $this->belongsTo(User::class);
-    }
-    public function wallet() {
-        return $this->belongsTo(Wallet::class);
+    public function transaction() {
+        return $this->hasMany(transaction::class);
     }
 }

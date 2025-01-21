@@ -10,8 +10,8 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController
 {
-    public function index() {
-        $user = User::latest() -> paginate(5);
+    public function GetDataUsers() {
+        $user = User::with('wallet')->leftJoin('wallets', 'users.id', '=', 'wallets.user_id')->get();
 
         return new UserResource(true, 'Success Get Users', $user);
     }
@@ -32,12 +32,17 @@ class UserController
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
-                'status' => 'Deactive'
             ]);
+
+            $walletController = new WalletController();
+            $walletController->createWallet($request, $user);
 
             return new UserResource(true, 'Register Success', $user);
         } catch (\Throwable $th) {
-            return new UserResource(false, 'Something error...', $th);
+            return response()->json([
+                'status' => 'failed',
+                'message' => $th->getMessage(),
+            ], 500);
         }
     }
 
@@ -57,19 +62,26 @@ class UserController
 
             if(!$token = auth()->guard('api')->attempt($credentials)) {
                 return response()->json([
-                    'success' => false,
+                    'status' => 'failed',
                     'message' => 'Email or Password is wrong!'
                 ], 401);
             }
 
+            JWTAuth::factory()->setTTL(1440);
+            $user = auth()->guard('api')->user();
+            $walletId = $user->wallet ? $user->wallet->id : null;
+            $balance = $user->wallet ? $user->wallet->balance : null;
+            $customClaims = ['wallet_id' => $walletId, 'balance' => $balance];
+            $token = JWTAuth::claims($customClaims)->attempt($credentials);
+
             return response()->json([
-                'success' => true,
+                'status' => 'success',
                 'messages' => 'Login Success',
                 'token' => $token
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
-                'success' => false,
+                'status' => 'failed',
                 'message' => $th->getMessage(),
             ], 500);
         }
@@ -80,7 +92,7 @@ class UserController
 
         if($removeToken) {
             return response()->json([
-                'success' => true,
+                'status' => 'success',
                 'message' => 'Logout Berhasil',
             ]);
         }

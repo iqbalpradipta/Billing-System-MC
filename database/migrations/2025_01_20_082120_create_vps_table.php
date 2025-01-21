@@ -16,12 +16,8 @@ return new class extends Migration
             $table->string('cpu');
             $table->string('ram');
             $table->string('storage');
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('wallet_id');
+            $table->integer('price');
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('wallet_id')->references('id')->on('wallets')->onDelete('cascade');
         });
     }
 
