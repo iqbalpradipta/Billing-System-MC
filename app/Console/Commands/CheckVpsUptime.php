@@ -15,7 +15,6 @@ class CheckVpsUptime extends Command
         parent::__construct();
     }
 
-    // Logika untuk memeriksa uptime
     public function handle()
     {
         $uptime = shell_exec("uptime -p");
