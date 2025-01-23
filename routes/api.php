@@ -14,5 +14,8 @@ Route::put('/wallet', [App\Http\Controllers\WalletController::class, 'UpdateWall
 
 Route::middleware('auth:api')->get('/transaction', [App\Http\Controllers\TransactionController::class, 'GetDataTransaction']);
 Route::middleware('auth:api')->post('/transaction', [App\Http\Controllers\TransactionController::class, 'CreateTransaction']);
+Route::middleware('auth:api')->put('/transaction/{id}', [App\Http\Controllers\TransactionController::class, 'UpdateTransaction']);
+Route::middleware('auth:api')->delete('/transaction/{id}', [App\Http\Controllers\TransactionController::class, 'DeleteTransaction']);
+Route::put('/update-transactions', [App\Http\Controllers\TransactionController::class, 'UpdateTransactionEveryHours']);
 
 Route::apiResource('/vps', App\Http\Controllers\VpsController::class);

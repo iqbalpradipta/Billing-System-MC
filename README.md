@@ -1,66 +1,297 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Billing System MaxCloud
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+The system will utilize Laravel's features to meet the following requirements:
 
-## About Laravel
+**1** : Customers must have sufficient balance to create a VPS.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**2** : Billing will commence immediately after the VPS is successfully created.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**3** : The basic components of the VPS include CPU, RAM, and Storage.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**4** : A check will be performed every hour to calculate the VPS uptime.
 
-## Learning Laravel
+**5** : Regular checks will ensure the total service cost for the month and the remaining balance to confirm the balance is sufficient.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+**6** : If the remaining balance is less than 10% of the total service cost, the customer will receive a notification that their balance is low.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+**7** : If the balance is negative, the customer will be suspended.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+## ERD Billing System MaxCloud
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+![App Screenshot](https://i.ibb.co.com/tc5K4TN/Cloud-Max-Billing-Sistem-3.jpg)
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## API Reference
 
-## Code of Conduct
+### Get All Users
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```http
+  GET /api/users
+```
 
-## Security Vulnerabilities
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `No Need` |  |  |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Register
 
-## License
+```http
+  POST /api/register
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `name`      | `string` | Required |
+| `email`      | `string` | Required, Uniq |
+| `name`      | `string` | Required, min: 6 |
+
+**Explain:**  
+When a user registers, a wallet (user balance) is automatically created.
+
+### Login
+
+```http
+  POST /api/login
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `name`      | `string` | Required |
+| `email`      | `string` | Required, Uniq |
+| `name`      | `string` | Required, min: 6 |
+
+**Explain:**  
+Token is available every 24 hours
+
+### Get Wallet
+
+```http
+  GET /api/wallet
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `No Need`      || | |
+
+### Update Wallet
+
+```http
+  PUT /api/wallet
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `headers`      | `Authorization` | Required |
+| `name`      | `string` | Required |
+| `email`      | `string` | Required, Uniq |
+| `name`      | `string` | Required, min: 6 |
+
+**Explain:**  
+To access this endpoint you need Token as authentication.
+
+### Get VPS
+
+```http
+  GET /api/vps
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `No Need`      || | |
+
+### Get Vps By Id
+
+```http
+  GET /api/vps/{id}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `params` | Required |
+| `name`      | `string` | Required |
+| `email`      | `string` | Required, Uniq |
+| `name`      | `string` | Required, min: 6 |
+
+### Create VPS
+
+```http
+  POST /api/vps
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `cpu`      | `string` | Required |
+| `ram`      | `string` | Required |
+| `storage`      | `string` | Required |
+| `price`      | `integer` | Required |
+
+### Update VPS
+
+```http
+  PUT /api/vps/{id}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `Params` | Required |
+| `cpu`      | `string` | Sometimes |
+| `ram`      | `string` | Sometimes |
+| `storage`      | `string` | Sometimes  |
+| `price`      | `integer` | Sometimes  |
+
+**Explain:**  
+Can update for some field or single field.
+
+### Delete VPS
+
+```http
+  DELETE /api/vps/{id}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `Params` | Required |
+
+### Get All Transaction
+
+```http
+  GET /api/vps
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `No Need`      || | |
+
+### Create Transaction
+
+```http
+  POST /api/vps
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `headers`      | `Authorization` | Required |
+| `vps_id`      | `integer` | Required |
+
+**Explain:**  
+To create transaction you need Token as authentication.
+And when you want pick vps from VPS table you gonna use vps_id.
+
+### Update Transaction
+
+```http
+  PUT /api/vps
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `headers`      | `Authorization` | Required |
+| `vps_id`      | `integer` | Required |
+
+**Explain:**  
+To update transaction you need Token as authentication.
+And when you want pick vps from VPS table you gonna use vps_id.
+
+### Update Transaction Every Hours
+
+```http
+  PUT /api/update-transactions
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `headers`      | `Authorization` | Required |
+
+**Explain:**  
+This is used to hit the API every hour. and utilizes the updated_at colomn as Uptime.
+
+### Delete Transaction Every Hours
+
+```http
+  DELETE /api/transaction/{id}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `headers`      | `Authorization` | Required |
+
+**Explain:**  
+Don't forget use token for delete transaction.
+
+## Explain about table ERD
+
+### User
+| User |
+|------|
+| Id (PK)  |
+| Name  |
+| Email | 
+| Password | 
+
+This table standart user login/register
+
+### Wallet
+| Wallets |
+|------|
+| Id (PK, FK)  |
+| balance | 
+
+This table is used to determine the amount of funds for certain users with a one-to-one relationship.
+
+### VPS
+| VPS |
+|------|
+| Id (PK)  |
+| Cpu | 
+| Ram | 
+| Storage | 
+| Price | 
+
+This table defines a VPS Product where there are standard specifications and additional Price. now here the Price in question is Price/hours.
+
+### Transaction
+| Transaction |
+|------|
+| Id (PK)  |
+| Amount | 
+| Type | 
+| Wallet_id (FK) | 
+| Vps_id (FK) | 
+
+So this transaction table intends to accommodate usage on the vps. Here there is an amount that is a field to calculate how much the total usage of the VPS is for so many hours.  
+Which then when the amount increases it corresponds to the price/hours of Vps_id and will reduce the balance of wallet_id also based on the price/hours of vps_id.
+## Installation
+
+**Clone project from github**
+
+```bash
+  git clone https://github.com/iqbalpradipta/Billing-System-MC.git
+```
+
+**Install Depedency**
+
+```bash
+  composer install
+```
+
+**Setting .env**  
+You can using .env.example and don't forget generate SECRET_JWT
+```bash
+  php artisan jwt:secret
+```
+
+**Migration**
+
+```bash
+  php artisan migrate
+```
+
+**Postman**  
+You can export my postman and using it.  
+
+```bash
+  name file: MaxCloud BillingSystem.postman_collection.json
+```
