@@ -33,7 +33,6 @@ class TransactionController
             $user = AuthHelpers::authenticate($request);
             $userArray = $user->toArray();
             $wallet_id = $userArray['wallet']['id'];
-            $balance = $userArray['wallet']['balance'];
 
             $transaction = Transaction::create([
                 'amount' => 0,

@@ -11,10 +11,34 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class UserController
 {
     public function GetDataUsers() {
-        $user = User::with('wallet')->leftJoin('wallets', 'users.id', '=', 'wallets.user_id')->get();
+        $user = User::with('wallet')
+                ->leftJoin('wallets', 'users.id', '=', 'wallets.user_id')
+                ->get();
 
         return new UserResource(true, 'Success Get Users', $user);
     }
+
+    public function GetDataUsersById($id) {
+        try {
+            $findId = User::leftJoin('wallets', 'users.id', '=', 'wallets.user_id')
+                    ->where('users.id', $id)
+                    ->first();
+
+            if (!$findId) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'User not found',
+                ], 404);
+            }
+            return new UserResource(true, 'Success Get User by ID', $findId);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
 
     public function register(Request $request) {
         $validator = Validator::make($request->all(), [

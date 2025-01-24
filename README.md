@@ -47,7 +47,7 @@ The system will utilize Laravel's features to meet the following requirements:
 | :-------- | :------- | :-------------------------------- |
 | `name`      | `string` | Required |
 | `email`      | `string` | Required, Uniq |
-| `name`      | `string` | Required, min: 6 |
+| `password`      | `string` | Required, min: 6 |
 
 **Explain:**  
 When a user registers, a wallet (user balance) is automatically created.
@@ -62,7 +62,7 @@ When a user registers, a wallet (user balance) is automatically created.
 | :-------- | :------- | :-------------------------------- |
 | `name`      | `string` | Required |
 | `email`      | `string` | Required, Uniq |
-| `name`      | `string` | Required, min: 6 |
+| `password`      | `string` | Required, min: 6 |
 
 **Explain:**  
 Token is available every 24 hours
@@ -86,9 +86,7 @@ Token is available every 24 hours
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `headers`      | `Authorization` | Required |
-| `name`      | `string` | Required |
-| `email`      | `string` | Required, Uniq |
-| `name`      | `string` | Required, min: 6 |
+| `balance`      | `integer` | Required |
 
 **Explain:**  
 To access this endpoint you need Token as authentication.
@@ -111,10 +109,7 @@ To access this endpoint you need Token as authentication.
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `id`      | `params` | Required |
-| `name`      | `string` | Required |
-| `email`      | `string` | Required, Uniq |
-| `name`      | `string` | Required, min: 6 |
+| `No Need`      || | |
 
 ### Create VPS
 
