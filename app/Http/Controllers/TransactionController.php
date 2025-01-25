@@ -141,6 +141,7 @@ class TransactionController
             $notification = null;
 
             foreach ($transactions as $transaction) {
+                Log::info($transaction);
                 $vps = $transaction->vps;
 
                 if ($vps) {
@@ -152,16 +153,18 @@ class TransactionController
                         $wallet->balance -= $vps->price;
                         $wallet->save();
 
-                        if ($wallet->initial_balance > 0) {
-                            $walletThreshold = $wallet->balance / $wallet->initial_balance;
-                            if ($walletThreshold < 0.1) {
-                                $notification = 'Saldo akan segera habis';
-                            }
+                        $threshold = $vps->price * 0.1;
+                        if ($wallet->balance < $threshold) {
+                            $notification = 'Saldo akan segera habis';
                         }
 
                     } else {
                         $transaction->type = 'Suspend';
                         $transaction->save();
+
+                        if ($wallet->balance < $vps->price) {
+                            $notification = 'Saldo anda tidak mencukupi !';
+                        }
                     }
                 }
             }
@@ -169,6 +172,7 @@ class TransactionController
             $response = [
                 'status' => 'success',
                 'message' => 'Transactions updated successfully',
+                'data' => $transaction
             ];
 
             if ($notification) {

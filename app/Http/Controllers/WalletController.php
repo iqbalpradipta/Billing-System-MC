@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\AuthHelpers;
 use App\Http\Resources\WalletResource;
 use App\Models\User;
 use App\Models\Wallet;
@@ -46,13 +47,7 @@ class WalletController
             return response()->json($validator->errors(), 422);
         }
         try {
-            $token = $request->header('Authorization');
-            if (!$token) {
-                return response()->json(['error' => 'Token tidak ditemukan'], 401);
-            }
-            $token = str_replace('Bearer ', '', $token);
-
-            $user = JWTAuth::parseToken()->authenticate($token);
+            $user = AuthHelpers::authenticate($request);
 
             if($user) {
                 $wallet = Wallet::where('user_id', $user->id)->first();
@@ -65,7 +60,7 @@ class WalletController
                 }
 
                 $wallet->update([
-                    'balance' => $request->balance,
+                    'balance' => $wallet->balance + $request->balance,
                 ]);
 
                 return new WalletResource(true, 'Success update wallet', $wallet);
